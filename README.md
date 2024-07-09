@@ -42,17 +42,36 @@
     make px4_sitl gazebo-classic
     ```
 
+    아래와 비슷한 형태의 error가 발생한다면 이는 script file에 대한 권한 문제에 해당됨
+    (ex: Tools/check_submodules.sh, Tools/simulation/gazebo-classic/sitl_run.sh, ...)
+    ```
+    /bin/sh: 1: [permission_denied_script]: Permission denied
+    ...
+    FAILED: ...
+    ```
+
+    권한 문제가 있는 파일에 권한 부여 후 위의 명령어 다시 실행
+    ```
+    chmod +x [permission_denied_script]
+    ```
+
 ## Development (Optional)
 
 (**주의** : PX4 version이 맞지 않을 시 나중에 어떤 문제가 발생할지 모르기 때문에 가능하면 해당 repo를 수정하지 않는 것이 좋으며, 최소한의 소프트웨어팀 인원만 수정하는 편이 좋다.)
 
-1. 아래의 명령어를 실행해, 모든 test를 통과하는지 확인 (오래 걸림)
+1. (**필수**) 아래의 명령어를 실행해, 모든 test를 통과하는지 확인 (오래 걸림)
     ``` shell
     make tests
     ```
     ```
     100% tests passed, 0 tests failed out of 139
     ```
+
+    잘 되다가 갑자기 tests failed가 발생하는 경우가 발생하기도 하는데, 그 때는 아래의 명령어 실행 후 위의 test를 다시 진행
+    ```
+    make clean
+    ```
+
 2. 수정 사항을 본인 계정의 repository에 push
     ```
     git add . # or git add [file name]
