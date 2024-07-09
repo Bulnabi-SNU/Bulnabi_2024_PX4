@@ -1,138 +1,80 @@
-# PX4 Drone Autopilot
+# Bulnabi_2024_PX4
+본 repository는 불나비의 2024 한국로봇항공기대회 PX4 개발을 위해 제작되었으며, PX4-AutoPilot의 v1.14.3 버전을 그대로 가져온 것이다. 대회의 소프트웨어 개발에 참여하는 모든 인원은 PX4_Autopilot을 해당 repository로 다시 변경해야 한다.
+**Reference**: [PX4_Autopilot github v1.14.3](https://github.com/PX4/PX4-Autopilot/tree/v1.14.3)
+#### 개발 환경
+> 1. Ubuntu 20.04
+> 2. ROS2 foxy
 
-[![Releases](https://img.shields.io/github/release/PX4/PX4-Autopilot.svg)](https://github.com/PX4/PX4-Autopilot/releases) [![DOI](https://zenodo.org/badge/22634/PX4/PX4-Autopilot.svg)](https://zenodo.org/badge/latestdoi/22634/PX4/PX4-Autopilot)
+## Installation
+1. 현재 repository를 fork 버튼을 통해 본인 계정으로 fork
+2. fork한 본인의 repository에서 본인의 local computer로 clone
+    ``` shell
+    git clone [your_repository_url]
+    # git clone https://github.com/okj001010/Bulnabi_2024_PX4.git
+    ```
+3. Bulnabi_2024_PX4 폴더로 이동해서 Bulnabi-SNU/Bulnabi_2024_PX4를 upstream으로 추가
+    ``` shell
+    git remote add upstream https://github.com/Bulnabi-SNU/Bulnabi_2024_PX4.git
+    ```
+4. Bulnabi_2024_PX4가 upstream으로 잘 등록되었다면, ```git remote -v```를 실행하면 다음과 같이 출력됨
+    ```
+    origin	https://github.com/okj001010/Bulnabi_2024_PX4.git (fetch)
+    origin	https://github.com/okj001010/Bulnabi_2024_PX4.git (push)
+    upstream	https://github.com/Bulnabi-SNU/Bulnabi_2024_PX4.git (fetch)
+    upstream	https://github.com/Bulnabi-SNU/Bulnabi_2024_PX4.git (push)
+    ```
+5. upstream에서 tag를 받음
+    ``` shell
+    git fetch --tags upstream
+    ```
+6. submodule을 update (오래 걸림)
+    ``` shell
+    make submodulesclean
+    ```
+7. 다음 명령어 실행
+    ``` shell
+    bash ./Tools/setup/ubuntu.sh
+    ```
+    완료가 되면 ubuntu를 로그아웃했다가 다시 접속
 
-[![Nuttx Targets](https://github.com/PX4/PX4-Autopilot/workflows/Nuttx%20Targets/badge.svg)](https://github.com/PX4/PX4-Autopilot/actions?query=workflow%3A%22Nuttx+Targets%22?branch=master) [![SITL Tests](https://github.com/PX4/PX4-Autopilot/workflows/SITL%20Tests/badge.svg?branch=master)](https://github.com/PX4/PX4-Autopilot/actions?query=workflow%3A%22SITL+Tests%22)
+8. 다시 Bulnabi_2024_PX4 폴더로 들어와서 다음 명령어 실행 (매우 오래 걸림)
+    ``` shell
+    make px4_sitl gazebo-classic
+    ```
 
-[![Discord Shield](https://discordapp.com/api/guilds/1022170275984457759/widget.png?style=shield)](https://discord.gg/dronecode)
+## Development (Optional)
 
-This repository holds the [PX4](http://px4.io) flight control solution for drones, with the main applications located in the [src/modules](https://github.com/PX4/PX4-Autopilot/tree/main/src/modules) directory. It also contains the PX4 Drone Middleware Platform, which provides drivers and middleware to run drones.
+(**주의** : PX4 version이 맞지 않을 시 나중에 어떤 문제가 발생할지 모르기 때문에 가능하면 해당 repo를 수정하지 않는 것이 좋으며, 최소한의 소프트웨어팀 인원만 수정하는 편이 좋다.)
 
-PX4 is highly portable, OS-independent and supports Linux, NuttX and MacOS out of the box.
+1. 아래의 명령어를 실행해, 모든 test를 통과하는지 확인 (오래 걸림)
+    ``` shell
+    make tests
+    ```
+    ```
+    100% tests passed, 0 tests failed out of 139
+    ```
+2. 수정 사항을 본인 계정의 repository에 push
+    ```
+    git add . # or git add [file name]
+    git commit -m "[YOUR_COMMIT_MESSAGE]" # Clear, concise and informative commit message
+    git push origin v1.14.3_bulnabi
+    ```
+3. Pull request 버튼을 클릭하고 reviewer를 지정해서 올림
+4. 추후에 reviewer가 확인하고 merge 버튼을 누르면 본인의 수정사항이 Bulnabi-SNU/Bulnabi_2024_PX4에 merge됨
 
-* Official Website: http://px4.io (License: BSD 3-clause, [LICENSE](https://github.com/PX4/PX4-Autopilot/blob/main/LICENSE))
-* [Supported airframes](https://docs.px4.io/main/en/airframes/airframe_reference.html) ([portfolio](https://px4.io/ecosystem/commercial-systems/)):
-  * [Multicopters](https://docs.px4.io/main/en/frames_multicopter/)
-  * [Fixed wing](https://docs.px4.io/main/en/frames_plane/)
-  * [VTOL](https://docs.px4.io/main/en/frames_vtol/)
-  * [Autogyro](https://docs.px4.io/main/en/frames_autogyro/)
-  * [Rover](https://docs.px4.io/main/en/frames_rover/)
-  * many more experimental types (Blimps, Boats, Submarines, High altitude balloons, etc)
-* Releases: [Downloads](https://github.com/PX4/PX4-Autopilot/releases)
+## How to upload PX4 onto Pixhawk
+위의 과정을 따라 Bulnabi_2024_PX4를 설치했다면, 그것을 Pixhawk 위에 올린 뒤에 본인들의 작업물(Companion computer 활용한 부분 포함)과 충돌이 일어나지는 않는지 확인해야 한다.
 
-
-## Building a PX4 based drone, rover, boat or robot
-
-The [PX4 User Guide](https://docs.px4.io/main/en/) explains how to assemble [supported vehicles](https://docs.px4.io/main/en/airframes/airframe_reference.html) and fly drones with PX4.
-See the [forum and chat](https://docs.px4.io/main/en/#getting-help) if you need help!
-
-
-## Changing code and contributing
-
-This [Developer Guide](https://docs.px4.io/main/en/development/development.html) is for software developers who want to modify the flight stack and middleware (e.g. to add new flight modes), hardware integrators who want to support new flight controller boards and peripherals, and anyone who wants to get PX4 working on a new (unsupported) airframe/vehicle.
-
-Developers should read the [Guide for Contributions](https://docs.px4.io/main/en/contribute/).
-See the [forum and chat](https://docs.px4.io/main/en/#getting-help) if you need help!
+기존에는 QGround Control을 연결한 뒤, Vehicle Setting -> Firmware에 들어간 뒤, USB를 뺐다가 다시 끼면 Stable한 px4 버전이 자동으로 픽스호크 보드에 업로드가 되었다. 그러나 이제는, Bulnabi_2024_PX4를 사용할 것이기 때문에 위 방법 대신 아래와 같은 방법을 사용한다.
 
 
-### Weekly Dev Call
-
-The PX4 Dev Team syncs up on a [weekly dev call](https://docs.px4.io/main/en/contribute/).
-
-> **Note** The dev call is open to all interested developers (not just the core dev team). This is a great opportunity to meet the team and contribute to the ongoing development of the platform. It includes a QA session for newcomers. All regular calls are listed in the [Dronecode calendar](https://www.dronecode.org/calendar/).
-
-
-## Maintenance Team
-
-Note: This is the source of truth for the active maintainers of PX4 ecosystem.
-
-| Sector | Maintainer |
-|---|---|
-| Founder | [Lorenz Meier](https://github.com/LorenzMeier) |
-| Architecture | [Daniel Agar](https://github.com/dagar) / [Beat Küng](https://github.com/bkueng)|
-| State Estimation | [Mathieu Bresciani](https://github.com/bresch) / [Paul Riseborough](https://github.com/priseborough) |
-| OS/NuttX | [David Sidrane](https://github.com/davids5) |
-| Drivers | [Daniel Agar](https://github.com/dagar) |
-| Simulation | [Jaeyoung Lim](https://github.com/Jaeyoung-Lim) |
-| ROS2 | [Beniamino Pozzan](https://github.com/beniaminopozzan) |
-| Community QnA Call | [Ramon Roche](https://github.com/mrpollo) |
-| [Documentation](https://docs.px4.io/main/en/) | [Hamish Willee](https://github.com/hamishwillee) |
-
-| Vehicle Type | Maintainer |
-|---|---|
-| Multirotor | [Matthias Grob](https://github.com/MaEtUgR) |
-| Fixed Wing | [Thomas Stastny](https://github.com/tstastny) |
-| Hybrid VTOL | [Silvan Fuhrer](https://github.com/sfuhrer) |
-| Boat | x |
-| Rover | x |
-
-See also [maintainers list](https://px4.io/community/maintainers/) (px4.io) and the [contributors list](https://github.com/PX4/PX4-Autopilot/graphs/contributors) (Github). However it may be not up to date.
-
-## Supported Hardware
-
-Pixhawk standard boards and proprietary boards are shown below (discontinued boards aren't listed).
-
-For the most up to date information, please visit [PX4 user Guide > Autopilot Hardware](https://docs.px4.io/main/en/flight_controller/).
-
-### Pixhawk Standard Boards
-
-These boards fully comply with Pixhawk Standard, and are maintained by the PX4-Autopilot maintainers and Dronecode team
-
-* FMUv6X and FMUv6C
-  * [CUAV Pixahwk V6X (FMUv6X)](https://docs.px4.io/main/en/flight_controller/cuav_pixhawk_v6x.html)
-  * [Holybro Pixhawk 6X (FMUv6X)](https://docs.px4.io/main/en/flight_controller/pixhawk6x.html)
-  * [Holybro Pixhawk 6C (FMUv6C)](https://docs.px4.io/main/en/flight_controller/pixhawk6c.html)
-  * [Holybro Pix32 v6 (FMUv6C)](https://docs.px4.io/main/en/flight_controller/holybro_pix32_v6.html)
-* FMUv5 and FMUv5X (STM32F7, 2019/20)
-  * [Pixhawk 4 (FMUv5)](https://docs.px4.io/main/en/flight_controller/pixhawk4.html)
-  * [Pixhawk 4 mini (FMUv5)](https://docs.px4.io/main/en/flight_controller/pixhawk4_mini.html)
-  * [CUAV V5+ (FMUv5)](https://docs.px4.io/main/en/flight_controller/cuav_v5_plus.html)
-  * [CUAV V5 nano (FMUv5)](https://docs.px4.io/main/en/flight_controller/cuav_v5_nano.html)
-  * [Auterion Skynode (FMUv5X)](https://docs.auterion.com/avionics/skynode)
-* FMUv4 (STM32F4, 2015)
-  * [Pixracer](https://docs.px4.io/main/en/flight_controller/pixracer.html)
-  * [Pixhawk 3 Pro](https://docs.px4.io/main/en/flight_controller/pixhawk3_pro.html)
-* FMUv3 (STM32F4, 2014)
-  * [Pixhawk 2](https://docs.px4.io/main/en/flight_controller/pixhawk-2.html)
-  * [Pixhawk Mini](https://docs.px4.io/main/en/flight_controller/pixhawk_mini.html)
-  * [CUAV Pixhack v3](https://docs.px4.io/main/en/flight_controller/pixhack_v3.html)
-* FMUv2 (STM32F4, 2013)
-  * [Pixhawk](https://docs.px4.io/main/en/flight_controller/pixhawk.html)
-
-### Manufacturer supported
-
-These boards are maintained to be compatible with PX4-Autopilot by the Manufacturers.
-
-* [ARK Electronics ARKV6X](https://docs.px4.io/main/en/flight_controller/arkv6x.html)
-* [CubePilot Cube Orange+](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_orangeplus.html)
-* [CubePilot Cube Orange](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_orange.html)
-* [CubePilot Cube Yellow](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_yellow.html)
-* [Holybro Durandal](https://docs.px4.io/main/en/flight_controller/durandal.html)
-* [Airmind MindPX V2.8](http://www.mindpx.net/assets/accessories/UserGuide_MindPX.pdf)
-* [Airmind MindRacer V1.2](http://mindpx.net/assets/accessories/mindracer_user_guide_v1.2.pdf)
-* [Holybro Kakute F7](https://docs.px4.io/main/en/flight_controller/kakutef7.html)
-
-### Community supported
-
-These boards don't fully comply industry standards, and thus is solely maintained by the PX4 publc community members.
-
-### Experimental
-
-These boards are nor maintained by PX4 team nor Manufacturer, and is not guaranteed to be compatible with up to date PX4 releases.
-
-* [Raspberry PI with Navio 2](https://docs.px4.io/main/en/flight_controller/raspberry_pi_navio2.html)
-* [Bitcraze Crazyflie 2.0](https://docs.px4.io/main/en/complete_vehicles/crazyflie2.html)
-
-## Project Roadmap
-
-**Note: Outdated**
-
-A high level project roadmap is available [here](https://github.com/orgs/PX4/projects/25).
-
-## Project Governance
-
-The PX4 Autopilot project including all of its trademarks is hosted under [Dronecode](https://www.dronecode.org/), part of the Linux Foundation.
-
-<a href="https://www.dronecode.org/" style="padding:20px" ><img src="https://mavlink.io/assets/site/logo_dronecode.png" alt="Dronecode Logo" width="110px"/></a>
-<a href="https://www.linuxfoundation.org/projects" style="padding:20px;"><img src="https://mavlink.io/assets/site/logo_linux_foundation.png" alt="Linux Foundation Logo" width="80px" /></a>
-<div style="padding:10px">&nbsp;</div>
+Bulnabi_2024_PX4 폴더에서 픽스호크 보드 제품 버전에 맞는 명령어를 실행한다. https://docs.px4.io/main/en/dev_setup/building_px4.html
+``` shell
+make px4_fmu-v6x_default
+```
+build가 완료되면, 다음 명령어를 통해 upload를 진행한다.
+``` shell
+make px4_fmu-v6x_default upload
+```
+그럼 bootloader 어쩌고라는 말이 뜰 텐데, 그 다음 usb를 뺐다가 끼면 기체에 우리의 Bulnabi_2024_PX4 펌웨어가 업로드되게 된다.
+그 이후는 기존에 QGroundControl 사용 방법과 동일하다. (펌웨어는 이미 업로드했으므로, 그 부분을 제외하고)
